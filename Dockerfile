@@ -34,7 +34,7 @@ COPY --from=tgui /tgui/public /server/tgui/public
 RUN curl -O -L https://github.com/OpenDreamProject/OpenDream/releases/download/latest/OpenDreamServer_linux-x64.tar.gz && \
 	tar -xf OpenDreamServer_linux-x64.tar.gz
 RUN mkdir -p config && cp config/example/config.toml config/config.toml
-RUN apt-get update && apt-get install -y curl build-essential && \
+RUN apt-get update && apt-get install -y curl build-essential libclang-dev clang && \
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y && \
     . ~/.cargo/env && \
     rustup target add x86_64-unknown-linux-gnu && \
