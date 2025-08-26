@@ -8,7 +8,7 @@ WORKDIR /server
 COPY . /server
 RUN curl -O -L https://github.com/OpenDreamProject/OpenDream/releases/download/latest/DMCompiler_linux-x64.tar.gz && \
 	tar -xf DMCompiler_linux-x64.tar.gz
-RUN dotnet DMCompiler_linux-x64/DMCompiler.dll --suppress-unimplemented --version=516.1666 paradise.dme
+RUN dotnet DMCompiler_linux-x64/DMCompiler.dll --suppress-unimplemented --version=516.1666 paradise.dme && ls -la
 
 FROM ubuntu:latest AS byond
 RUN apt-get update && apt-get install -y \
@@ -34,4 +34,5 @@ COPY --from=tgui /tgui/public /server/tgui/public
 RUN curl -O -L https://github.com/OpenDreamProject/OpenDream/releases/download/latest/OpenDreamServer_linux-x64.tar.gz && \
 	tar -xf OpenDreamServer_linux-x64.tar.gz
 RUN mkdir -p config && cp config/example/config.toml config/config.toml
-ENTRYPOINT ["dotnet", "OpenDreamServer_linux-x64/Robust.Server.dll"]
+RUN ls -la *.json *.dmb || echo "No JSON or DMB files found"
+ENTRYPOINT ["dotnet", "OpenDreamServer_linux-x64/Robust.Server.dll", "paradise.json"]
