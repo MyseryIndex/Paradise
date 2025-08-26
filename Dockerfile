@@ -8,7 +8,7 @@ WORKDIR /server
 COPY . /server
 RUN curl -O -L https://github.com/OpenDreamProject/OpenDream/releases/download/latest/DMCompiler_linux-x64.tar.gz && \
 	tar -xf DMCompiler_linux-x64.tar.gz
-RUN dotnet DMCompiler_linux-x64/DMCompiler.dll --suppress-unimplemented --version=516.1666 paradise.dme && ls -la
+RUN dotnet DMCompiler_linux-x64/DMCompiler.dll --suppress-unimplemented --version=516.1666 paradise.dme
 
 FROM ubuntu:latest AS byond
 RUN apt-get update && apt-get install -y \
@@ -37,8 +37,9 @@ RUN mkdir -p config && cp config/example/config.toml config/config.toml
 RUN apt-get update && apt-get install -y curl build-essential && \
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y && \
     . ~/.cargo/env && \
+    rustup target add x86_64-unknown-linux-gnu && \
     cd rust && \
-    cargo build --release && \
-    cp target/release/libparadise_rust.so /server/librust_g.so && \
-    cp target/release/libparadise_rust.so /server/librustlibs.so
+    cargo build --release --target x86_64-unknown-linux-gnu && \
+    cp target/x86_64-unknown-linux-gnu/release/libparadise_rust.so /server/librust_g.so && \
+    cp target/x86_64-unknown-linux-gnu/release/libparadise_rust.so /server/librustlibs.so
 ENTRYPOINT ["dotnet", "OpenDreamServer_linux-x64/Robust.Server.dll", "/server/paradise.json"]
