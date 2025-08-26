@@ -39,6 +39,8 @@ RUN apt-get update && apt-get install -y curl build-essential libclang-dev clang
     . ~/.cargo/env && \
     cd rust && \
     sed -i '/byondapi.*github.com/d' Cargo.toml && \
+    cat Cargo.toml && \
+    rustup default stable-x86_64-unknown-linux-gnu && \
     cargo build --release && \
     ls -la target/release/ && \
     cp target/release/librustlibs.so /server/librust_g.so && \
