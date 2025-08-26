@@ -3,12 +3,9 @@ name: CI
 on:
   push:
     branches:
-      - main
       - master
-      - dockify
   pull_request:
     branches:
-      - main
       - master
       - dockify
 jobs:
