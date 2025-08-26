@@ -34,16 +34,5 @@ COPY --from=tgui /tgui/public /server/tgui/public
 RUN curl -O -L https://github.com/OpenDreamProject/OpenDream/releases/download/latest/OpenDreamServer_linux-x64.tar.gz && \
 	tar -xf OpenDreamServer_linux-x64.tar.gz
 RUN mkdir -p config && cp config/example/config.toml config/config.toml
-RUN echo "Creating placeholder Rust libraries..." && \
-    cat > /server/stub_lib.c << 'EOF' && \
-#include <stdio.h>
-const char* rustg_get_version() { return "3.4.0-P"; }
-void rustlibs_http_start_client() { printf("HTTP client stub\n"); }
-void rustlibs_git_revparse() { printf("Git revparse stub\n"); }
-void rustlibs_log_write() { printf("Log write stub\n"); }
-void rustlibs_http_shutdown_client() { printf("HTTP shutdown stub\n"); }
-EOF
-    gcc -shared -fPIC -o /server/librust_g.so /server/stub_lib.c && \
-    gcc -shared -fPIC -o /server/librustlibs.so /server/stub_lib.c && \
-    rm /server/stub_lib.c
-ENTRYPOINT ["dotnet", "OpenDreamServer_linux-x64/Robust.Server.dll", "/server/paradise.json"]
+
+ENTRYPOINT ["OpenDreamServer_linux-x64/Robust.Server", "/server/paradise.json"]
