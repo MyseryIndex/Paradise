@@ -34,5 +34,4 @@ COPY --from=tgui /tgui/public /server/tgui/public
 RUN curl -O -L https://github.com/OpenDreamProject/OpenDream/releases/download/latest/OpenDreamServer_linux-x64.tar.gz && \
 	tar -xf OpenDreamServer_linux-x64.tar.gz
 RUN mkdir -p config && cp config/example/config.toml config/config.toml
-RUN ls -la *.json *.dmb || echo "No JSON or DMB files found"
-ENTRYPOINT ["dotnet", "OpenDreamServer_linux-x64/Robust.Server.dll", "paradise.json"]
+ENTRYPOINT ["dotnet", "OpenDreamServer_linux-x64/Robust.Server.dll", "/server/paradise.json"]
