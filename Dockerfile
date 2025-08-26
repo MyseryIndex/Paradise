@@ -27,10 +27,24 @@ RUN curl "http://www.byond.com/download/build/${TARGET_MAJOR}/${TARGET_MAJOR}.${
 RUN make here && \
 	echo "$TARGET_MAJOR.$TARGET_MINOR" > "version.txt"
 
+FROM rust:latest AS rust-builder
+WORKDIR /rust
+COPY /rust /rust
+RUN rustup target add i686-unknown-linux-gnu
+RUN apt-get update && apt-get install -y gcc-multilib
+RUN cargo build --release --target i686-unknown-linux-gnu
+
+FROM ubuntu:latest AS rustg-downloader
+WORKDIR /libs
+RUN apt-get update && apt-get install -y curl
+RUN curl -L -o librust_g.so "https://github.com/ParadiseSS13/rust-g/releases/download/v3.4.0-P/librust_g.so"
+
 FROM --platform=linux/amd64 bitnami/dotnet
 WORKDIR /server
 COPY --from=dme /server /server
 COPY --from=tgui /tgui/public /server/tgui/public
+COPY --from=rust-builder /rust/target/i686-unknown-linux-gnu/release/librustlibs.so /server/
+COPY --from=rustg-downloader /libs/librust_g.so /server/
 RUN curl -O -L https://github.com/OpenDreamProject/OpenDream/releases/download/latest/OpenDreamServer_linux-x64.tar.gz && \
 	tar -xf OpenDreamServer_linux-x64.tar.gz
 RUN mkdir -p config && cp config/example/config.toml config/config.toml
