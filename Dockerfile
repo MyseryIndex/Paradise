@@ -29,7 +29,10 @@ RUN make here && \
 
 FROM --platform=linux/amd64 bitnami/dotnet
 WORKDIR /server
-RUN apt-get update && apt-get install -y libc6:i386 libgcc-s1:i386 libstdc++6:i386 curl && rm -rf /var/lib/apt/lists/*
+RUN dpkg --add-architecture i386 && \
+    apt-get update && \
+    apt-get install -y libc6:i386 libgcc-s1:i386 libstdc++6:i386 curl && \
+    rm -rf /var/lib/apt/lists/*
 COPY --from=dme /server /server
 COPY --from=tgui /tgui/public /server/tgui/public
 RUN curl -L -o librust_g.so "https://github.com/ParadiseSS13/rust-g/releases/download/v3.4.0-P/librust_g.so"
