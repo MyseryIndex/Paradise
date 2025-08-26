@@ -41,6 +41,7 @@ RUN apt-get update && apt-get install -y curl build-essential libclang-dev clang
     apt-get install -y gcc-multilib && \
     cd rust && \
     cargo build --release --target i686-unknown-linux-gnu && \
-    cp target/i686-unknown-linux-gnu/release/libparadise_rust.so /server/librust_g.so && \
-    cp target/i686-unknown-linux-gnu/release/libparadise_rust.so /server/librustlibs.so
+    ls -la target/i686-unknown-linux-gnu/release/ && \
+    cp target/i686-unknown-linux-gnu/release/librustlibs.so /server/librust_g.so && \
+    cp target/i686-unknown-linux-gnu/release/librustlibs.so /server/librustlibs.so
 ENTRYPOINT ["dotnet", "OpenDreamServer_linux-x64/Robust.Server.dll", "/server/paradise.json"]
