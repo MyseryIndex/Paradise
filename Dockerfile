@@ -33,5 +33,5 @@ COPY --from=dme /server /server
 COPY --from=tgui /tgui/public /server/tgui/public
 RUN curl -O -L https://github.com/OpenDreamProject/OpenDream/releases/download/latest/OpenDreamServer_linux-x64.tar.gz && \
 	tar -xf OpenDreamServer_linux-x64.tar.gz
-# RUN dotnet OpenDreamServer_linux-x64/Robust.Server.dll --version=516.1666 paradise.dme
+RUN mkdir -p config && cp config/example/config.toml config/config.toml
 ENTRYPOINT ["dotnet", "OpenDreamServer_linux-x64/Robust.Server.dll"]
