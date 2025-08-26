@@ -31,7 +31,7 @@ FROM rust:latest AS rust-builder
 WORKDIR /rust
 COPY /rust /rust
 RUN rustup target add i686-unknown-linux-gnu
-RUN apt-get update && apt-get install -y gcc-multilib
+RUN apt-get update && apt-get install -y gcc-multilib clang libclang-dev
 RUN cargo build --release --target i686-unknown-linux-gnu
 
 FROM ubuntu:latest AS rustg-downloader
