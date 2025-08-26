@@ -37,9 +37,10 @@ RUN mkdir -p config && cp config/example/config.toml config/config.toml
 RUN apt-get update && apt-get install -y curl build-essential libclang-dev clang && \
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y && \
     . ~/.cargo/env && \
-    rustup target add x86_64-unknown-linux-gnu && \
+    rustup target add i686-unknown-linux-gnu && \
+    apt-get install -y gcc-multilib && \
     cd rust && \
-    cargo build --release --target x86_64-unknown-linux-gnu && \
-    cp target/x86_64-unknown-linux-gnu/release/libparadise_rust.so /server/librust_g.so && \
-    cp target/x86_64-unknown-linux-gnu/release/libparadise_rust.so /server/librustlibs.so
+    cargo build --release --target i686-unknown-linux-gnu && \
+    cp target/i686-unknown-linux-gnu/release/libparadise_rust.so /server/librust_g.so && \
+    cp target/i686-unknown-linux-gnu/release/libparadise_rust.so /server/librustlibs.so
 ENTRYPOINT ["dotnet", "OpenDreamServer_linux-x64/Robust.Server.dll", "/server/paradise.json"]
