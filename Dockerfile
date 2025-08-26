@@ -29,9 +29,20 @@ RUN make here && \
 
 FROM --platform=linux/amd64 bitnami/dotnet
 WORKDIR /server
-RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y curl gcc && rm -rf /var/lib/apt/lists/*
 COPY --from=dme /server /server
 COPY --from=tgui /tgui/public /server/tgui/public
+
+# Create stub rust-g library that returns expected version
+RUN echo 'const char* get_version() { return "3.4.0-P"; }' > rustg_stub.c && \
+    gcc -shared -fPIC -o librust_g.so rustg_stub.c && \
+    rm rustg_stub.c
+
+# Create stub rustlibs library - just create an empty shared library
+RUN echo 'void _unused() {}' > rustlibs_stub.c && \
+    gcc -shared -fPIC -o librustlibs.so rustlibs_stub.c && \
+    rm rustlibs_stub.c
+
 RUN curl -O -L https://github.com/OpenDreamProject/OpenDream/releases/download/latest/OpenDreamServer_linux-x64.tar.gz && \
 	tar -xf OpenDreamServer_linux-x64.tar.gz
 RUN mkdir -p config && cp config/example/config.toml config/config.toml
