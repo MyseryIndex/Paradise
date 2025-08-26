@@ -29,14 +29,9 @@ RUN make here && \
 
 FROM --platform=linux/amd64 bitnami/dotnet
 WORKDIR /server
-RUN dpkg --add-architecture i386 && \
-    apt-get update && \
-    apt-get install -y libc6:i386 libgcc-s1:i386 libstdc++6:i386 curl && \
-    rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
 COPY --from=dme /server /server
 COPY --from=tgui /tgui/public /server/tgui/public
-RUN curl -L -o librust_g.so "https://github.com/ParadiseSS13/rust-g/releases/download/v3.4.0-P/librust_g.so"
-COPY tools/ci/librustlibs_ci.so /server/librustlibs.so
 RUN curl -O -L https://github.com/OpenDreamProject/OpenDream/releases/download/latest/OpenDreamServer_linux-x64.tar.gz && \
 	tar -xf OpenDreamServer_linux-x64.tar.gz
 RUN mkdir -p config && cp config/example/config.toml config/config.toml
