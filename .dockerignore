@@ -1,0 +1,11 @@
+.DS_Store
+*.zip
+
+.git
+.github
+.vscode
+docks
+tmp
+byond
+
+Dockerfile.*
